@@ -1,16 +1,19 @@
 import React, { useState } from "react";
+import IngredientsList from "./IngredientsList";
+import ClaudeRecipe from "./ClaudeRecipe";
 
 export default function Main() {
 	const [ingredients, setIngredients] = useState([]);
-
-	const listOfIngredients = ingredients.map((ingredient) => {
-		return <li key={ingredient}>{ingredient}</li>;
-	});
+	const [recipeShown, setRecipeShown] = useState(false);
 
 	const addIngredient = (formData) => {
 		const newIngredient = formData.get("ingredient");
 		setIngredients((prev) => [...prev, newIngredient]);
 	};
+
+  	const generateRecipe = () => {
+			setRecipeShown(true);
+		};
 
 	return (
 		<main>
@@ -22,29 +25,23 @@ export default function Main() {
 						placeholder="e.g. oregano"
 						aria-label="Add Ingredient"
 						name="ingredient"
+						required
 					/>
 
 					<button className="btn">Add ingredient</button>
 				</form>
 				<h2>Ingredients on hand:</h2>
 
-				{listOfIngredients.length > 0 ? (
-					<section>
-						<ul className="ingredients-list" aria-live="polite">
-							{listOfIngredients}
-						</ul>
-						<div className="get-recipe-container">
-							<div>
-								<h3>Ready for a recipe?</h3>
-								<p>Generate a recipe from your list of ingredients.</p>
-							</div>
-							<button>Get a recipe</button>
-						</div>
-					</section>
+				{ingredients.length > 0 ? (
+					<IngredientsList
+						ingredients={ingredients}
+						generateRecipe={generateRecipe}
+					/>
 				) : (
 					<p className="no-ingredients">No ingredients added yet.</p>
 				)}
 			</section>
+			{recipeShown && <ClaudeRecipe />}
 		</main>
 	);
 }
